@@ -1,8 +1,6 @@
 //: concurrency/Atomicity.java
 // {Exec: javap -c Atomicity}
 package concurrency;
-//
-//
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
