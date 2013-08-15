@@ -3,7 +3,11 @@
 // {Args: 1100}
 package concurrency;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.*;
+
+import net.mindview.util.New;
 import static net.mindview.util.Print.*;
 
 class NeedsCleanup {
@@ -55,17 +59,43 @@ class Blocked3 implements Runnable {
 	}
 }
 
+
+class Blocked4 implements Runnable {
+	private volatile double d = 0.0;
+
+	public void run() {
+
+			boolean a = Thread.interrupted();
+			
+			for (int i = 1; i < 250000; i++)
+				d = d + (Math.PI + Math.E) / d;
+			System.out.println(new Date().getTime()+" "+a);
+			
+			try {
+				System.out.println(Thread.currentThread().isInterrupted());
+//					System.out.println(Thread.interrupted());
+				TimeUnit.MILLISECONDS.sleep(new Integer(1000));
+			} catch (InterruptedException e) {
+				System.out.println(new Date().getTime()+ " haha");
+				System.exit(0);
+			}
+	}
+}
+
 public class InterruptingIdiom {
 	public static void main(String[] args) throws Exception {
 //		if (args.length != 1) {
 //			print("usage: java InterruptingIdiom delay-in-mS");
 //			System.exit(1);
 //		}
-		Thread t = new Thread(new Blocked3());
+		Thread t = new Thread(new Blocked4());
 		t.start();
 //		TimeUnit.MILLISECONDS.sleep(new Integer(args[0]));
-		TimeUnit.MILLISECONDS.sleep(new Integer(10000));
+		
+//		TimeUnit.SECONDS.sleep(new Integer(1));
+		System.out.println(new Date().getTime()+ " Interrupt");
 		t.interrupt();
+		
 	}
 } /*
  * Output: (Sample) NeedsCleanup 1 Sleeping NeedsCleanup 2 Calculating Finished
